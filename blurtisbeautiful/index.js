@@ -52,7 +52,7 @@ function ticked() {
 function createNodes(transactions) {
 
   //transactions = transactions.filter((x) => {return x.operations[0][0] == 'custom_json'})
-  
+
   var nodes = []
 
   transactions.forEach( tx => {
@@ -62,7 +62,7 @@ function createNodes(transactions) {
     var account = getAccount(tx.operations[0])
 
     nodes.push({radius: radius, label: label, color: color, account: account})
-  })  
+  })
 
   return nodes
 }
@@ -74,13 +74,13 @@ function getLabel(operation) {
   if (opname == 'comment' || opname == 'post') {
     var json = operation[1].json_metadata
     if (json) {
-      var json = JSON.parse(json)       
+      var json = JSON.parse(json)
     }
 
     if (json && json.app) {
       var app = json.app
       app = app.split('/')[0]
-      
+
       if (app == 'leofinance') {
         label = 'Leo'
       } else if (app == 'peakd') {
@@ -108,13 +108,13 @@ function getLabel(operation) {
       var id = operation[1].id
 
       var json = operation[1].json
-      var json = JSON.parse(json) 
-   
+      var json = JSON.parse(json)
+
 
       if (id == '' && json.prevServerSeed) {
         return 'EpicDice'
       }
-      
+
       var app = json.app
       if (app && (app.includes('steemmonsters') || app.includes('splinterlands')) || id.includes('sm_') || id.includes('pm_')) {
         return 'SL'
@@ -252,7 +252,7 @@ document.querySelector('button#gotoblock').onclick = (e) => {
     getLatestBlocknum()
   } else {
     document.querySelector('#blockNum').data = `${blockNum + 1}`
-    document.querySelector('#blockNum').innerText = `${blockNum}`    
+    document.querySelector('#blockNum').innerText = `${blockNum}`
   }
 }
 
@@ -277,7 +277,7 @@ document.querySelector('button#fastforward').onclick = (e) => {
   }
   else {
     var newSpeed = currentSpeed + speedIncrement
-    newSpeed = clamp(newSpeed, minSpeed, maxSpeed)    
+    newSpeed = clamp(newSpeed, minSpeed, maxSpeed)
   }
 
   // update UI
@@ -298,12 +298,12 @@ function getSpeedSetting() {
 
 
 
-hive.api.setOptions({url: "https://api.deathwing.me/"})
+blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
 
 function getLatestBlocknum() {
   // Get the current blocknum
-  hive.api.getDynamicGlobalProperties(function(err, result) {
+  blurt.api.getDynamicGlobalProperties(function(err, result) {
     if (err) {
       console.log(err)
       return
@@ -334,7 +334,7 @@ function runLoop () {
 
     console.log(blockNum)
 
-    hive.api.getBlock(blockNum, function(err, result) {
+    blurt.api.getBlock(blockNum, function(err, result) {
       //console.log(err, result);
       //console.log(blockNum)
       if (err) {
@@ -376,7 +376,7 @@ function runLoop () {
         document.querySelector('#blockNum').data = `${parseInt(blockNum) + 1}`
         document.querySelector('#blockNum').innerText = `${blockNum}`
         document.querySelector('#currentWitness').innerText = `${block.witness}`
-        document.querySelector('#timestamp').innerText = `${block.timestamp}`        
+        document.querySelector('#timestamp').innerText = `${block.timestamp}`
       }
     });
 }
@@ -386,7 +386,7 @@ var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('block')) {
   var blockNum = urlParams.get('block')
   var blockNum = parseInt(blockNum)
-  
+
   if (isNaN(blockNum) || blockNum < 0) {
     getLatestBlocknum()
   } else {
@@ -404,8 +404,8 @@ if (urlParams.has('block')) {
 function runtimeAdjustSpeed() {
     var currentSpeed = 3000 / getSpeedSetting()
 
-    runLoop()    
-  
+    runLoop()
+
     setTimeout( () => {
       runtimeAdjustSpeed()
     },
