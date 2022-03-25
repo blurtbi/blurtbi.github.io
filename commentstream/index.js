@@ -1,6 +1,6 @@
 // Created by peakd.com/@hivetrending
 
-hive.api.setOptions({url: "https://api.deathwing.me/"})
+blurt.api.setOptions({ url: 'https://rpc.blurt.world', useAppbaseApi: true });
 
 
 var speed = 3000
@@ -13,24 +13,24 @@ function clamp(num, min, max) {
 }
 
 drag = simulation => {
-  
+
   function dragstarted(event, d) {
     if (!event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
-  
+
   function dragged(event,d) {
     d.fx = event.x;
     d.fy = event.y;
   }
-  
+
   function dragended(event,d) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
   }
-  
+
   return d3.drag()
       .on("start", dragstarted)
       .on("drag", dragged)
@@ -40,7 +40,7 @@ drag = simulation => {
 nodes = []
 links = []
 
-function startSimulation() {  
+function startSimulation() {
 
   const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id))
@@ -115,7 +115,7 @@ function updateData(nodes) {
         .attr("text-anchor", "middle")
         .text(function(d) { return d.label })
         .style("font-size", '17px')
-  })  
+  })
 
   nodes.exit().remove()
 
@@ -137,7 +137,7 @@ document.querySelector('button#gotoblock').onclick = (e) => {
     getLatestBlocknum()
   } else {
     document.querySelector('#blockNum').data = `${blockNum + 1}`
-    document.querySelector('#blockNum').innerText = `${blockNum}`    
+    document.querySelector('#blockNum').innerText = `${blockNum}`
   }
 }
 
@@ -162,7 +162,7 @@ document.querySelector('button#fastforward').onclick = (e) => {
   }
   else {
     var newSpeed = currentSpeed + speedIncrement
-    newSpeed = clamp(newSpeed, minSpeed, maxSpeed)    
+    newSpeed = clamp(newSpeed, minSpeed, maxSpeed)
   }
 
   // update UI
@@ -187,7 +187,7 @@ function getSpeedSetting() {
 
 function getLatestBlocknum() {
   // Get the current blocknum
-  hive.api.getDynamicGlobalProperties(function(err, result) {
+  blurt.api.getDynamicGlobalProperties(function(err, result) {
     if (err) {
       console.log(err)
       return
@@ -219,7 +219,7 @@ function runLoop () {
 
     //console.log(blockNum)
 
-    hive.api.getBlock(blockNum, function(err, result) {
+    blurt.api.getBlock(blockNum, function(err, result) {
       //console.log(err, result);
       //console.log(blockNum)
       if (err) {
@@ -262,7 +262,7 @@ function runLoop () {
         document.querySelector('#blockNum').data = `${parseInt(blockNum) + 1}`
         document.querySelector('#blockNum').innerText = `${blockNum}`
         document.querySelector('#currentWitness').innerText = `${block.witness}`
-        document.querySelector('#timestamp').innerText = `${block.timestamp}`        
+        document.querySelector('#timestamp').innerText = `${block.timestamp}`
       }
 
       if (document.querySelector('button#pause').hidden == true) {
@@ -276,7 +276,7 @@ var urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has('block')) {
   var blockNum = urlParams.get('block')
   var blockNum = parseInt(blockNum)
-  
+
   if (isNaN(blockNum) || blockNum < 0) {
     getLatestBlocknum()
   } else {
@@ -294,8 +294,8 @@ if (urlParams.has('block')) {
 function runtimeAdjustSpeed() {
     var currentSpeed = 3000 / getSpeedSetting()
 
-    runLoop()    
-  
+    runLoop()
+
     setTimeout( () => {
       runtimeAdjustSpeed()
     },
