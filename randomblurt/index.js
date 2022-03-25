@@ -1,11 +1,11 @@
 // index.js
 
-hiveTx.config.node = 'https://api.deathwing.me'
+blurtTx.config.node = 'https://rpc.blurt.world'
 
 const MIN_BODY_LENGTH   = 250
 
 function getPost() {
-  hiveTx
+  blurtTx
     .call('condenser_api.get_discussions_by_created', [{tag:"", limit: 100}])
     .then(res => {
       // skip posts < MIN_BODY_LENGTH chars in length
@@ -18,9 +18,9 @@ function getPost() {
       posts = posts.filter(item => item.body_length >= MIN_BODY_LENGTH)
       // nsfw category filters
       posts = posts.filter(item => !['porn','dporn','xxx','nsfw'].includes(item.category) )
-      
+
       const post = posts[Math.floor(Math.random() * posts.length)];
-      
+
       // update button actions
       document.querySelector('button.next').onclick = () => {
         getPost()
@@ -144,7 +144,7 @@ function getPost() {
         // lazy load images to improve performance
         img.loading = 'lazy'
       })
-  })  
+  })
 }
 
 
@@ -171,8 +171,8 @@ function toggleSigninUIState(signedIn) {
 }
 
 if (window.localStorage.getItem('hiveaccount')) {
-  // already signed in 
-  toggleSigninUIState(true) 
+  // already signed in
+  toggleSigninUIState(true)
 } else {
   toggleSigninUIState(false)
 }
@@ -206,7 +206,7 @@ document.querySelector('form#signin').onsubmit = (event) => {
 
 // handle sign out events
 document.querySelector('#signout').onclick = (event) => {
-  
+
   localStorage = window.localStorage
   if (localStorage.getItem('hiveaccount')) {
     localStorage.removeItem('hiveaccount')
